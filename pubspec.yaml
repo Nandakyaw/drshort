@@ -42,6 +42,7 @@ dependencies:
   provider: ^6.0.5
   carousel_slider: ^5.0.0
   lottie: ^2.0.0
+  encrypt: ^5.0.0
 
 dev_dependencies:
   flutter_test:
