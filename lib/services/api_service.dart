@@ -8,7 +8,7 @@ import '../models/episode_model.dart';
 class ApiService {
   // Fetch series data
   Future<List<Series>> fetchSeries() async {
-    final response = await http.get(Uri.parse('http://short.anubisscan.xyz/api/get_series.php'));
+    final response = await http.get(Uri.parse('https://short.anubisscan.xyz/api/get_series.php'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
