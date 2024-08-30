@@ -1,18 +1,35 @@
-// models/episode_model.dart
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 class Episode {
   final int episodeNumber;
   final String episodeTitle;
-  final String episodeUrl;
+  final String encryptedEpisodeUrl;
 
-  Episode({required this.episodeNumber, required this.episodeTitle, required this.episodeUrl});
+  Episode({
+    required this.episodeNumber,
+    required this.episodeTitle,
+    required this.encryptedEpisodeUrl
+  });
 
-  // Factory method to create an Episode object from JSON
   factory Episode.fromJson(Map<String, dynamic> json) {
     return Episode(
       episodeNumber: json['episode_number'],
       episodeTitle: json['episode_title'],
-      episodeUrl: json['episode_url'],
+      encryptedEpisodeUrl: json['episode_url'],
     );
+  }
+
+  String getDecryptedUrl() {
+    final key = encrypt.Key.fromUtf8('1234567890123456'); // 16 characters for AES-128
+    final iv = encrypt.IV.fromUtf8('1234567890123456');   // 16 characters IV
+    final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
+
+    try {
+      final decrypted = encrypter.decrypt64(encryptedEpisodeUrl, iv: iv);
+      return decrypted;
+    } catch (e) {
+      print('Decryption error: $e');
+      return 'Decryption failed';
+    }
   }
 }
