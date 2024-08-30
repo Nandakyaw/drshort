@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../services/api_service.dart';
 import '../models/episode_model.dart';
-import '../models/series_model.dart';  // Import your Series model
+import '../models/series_model.dart';
+import '../utils/decryptor.dart';// Import your Series model
 
 class EpisodeScreen extends StatefulWidget {
   final String seriesId;
-  final Series series;  // Add Series parameter
+  final Series series;
 
-  EpisodeScreen({required this.seriesId, required this.series});  // Update constructor
+  EpisodeScreen({required this.seriesId, required this.series});
 
   @override
   _EpisodeScreenState createState() => _EpisodeScreenState();
@@ -32,7 +33,7 @@ class _EpisodeScreenState extends State<EpisodeScreen> {
       setState(() {
         episodesList = fetchedEpisodes;
         if (episodesList.isNotEmpty) {
-          _initializeAndPlayVideo(episodesList[currentEpisodeIndex].episodeUrl);
+          _initializeAndPlayVideo(episodesList[currentEpisodeIndex].getDecryptedUrl());
         }
       });
     } catch (e) {
@@ -63,7 +64,7 @@ class _EpisodeScreenState extends State<EpisodeScreen> {
     if (currentEpisodeIndex < episodesList.length - 1) {
       setState(() {
         currentEpisodeIndex++;
-        _initializeAndPlayVideo(episodesList[currentEpisodeIndex].episodeUrl);
+        _initializeAndPlayVideo(episodesList[currentEpisodeIndex].getDecryptedUrl());
       });
     }
   }
@@ -72,7 +73,7 @@ class _EpisodeScreenState extends State<EpisodeScreen> {
     if (currentEpisodeIndex > 0) {
       setState(() {
         currentEpisodeIndex--;
-        _initializeAndPlayVideo(episodesList[currentEpisodeIndex].episodeUrl);
+        _initializeAndPlayVideo(episodesList[currentEpisodeIndex].getDecryptedUrl());
       });
     }
   }
@@ -187,7 +188,7 @@ class _EpisodeScreenState extends State<EpisodeScreen> {
                       Navigator.pop(context);
                       setState(() {
                         currentEpisodeIndex = index;
-                        _initializeAndPlayVideo(episodesList[currentEpisodeIndex].episodeUrl);
+                        _initializeAndPlayVideo(episodesList[currentEpisodeIndex].getDecryptedUrl());
                       });
                     },
                     child: Container(
